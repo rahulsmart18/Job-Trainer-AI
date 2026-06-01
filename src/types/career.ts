@@ -1,4 +1,23 @@
+export type HrQaItem = {
+  question: string;
+  answerScript: string;
+  proTip?: string;
+};
+
+export type HrGuidancePlan = {
+  headline?: string;
+  roleFocus?: string;
+  bridgeNote?: string;
+  hrCommunicationTips: string[];
+  recruiterApproachScripts: string[];
+  commonHrQuestions: HrQaItem[];
+  realWorldScenarios: string[];
+};
+
 export type RoadmapPlan = {
+  headline?: string;
+  primaryFocus?: string;
+  bridgeNote?: string;
   technicalSkills: string[];
   communicationPlan: string[];
   hrPreparation: string[];
@@ -6,7 +25,7 @@ export type RoadmapPlan = {
   resumeApproach: string[];
 };
 
-export type HrGuidancePlan = {
+export type HrGuidancePlanLegacy = {
   hrCommunicationTips: string[];
   recruiterApproachScripts: string[];
   commonHrQuestions: string[];

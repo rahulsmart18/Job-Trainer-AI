@@ -4,17 +4,20 @@ import { signIn } from "next-auth/react";
 
 export default function LoginPage() {
   return (
-    <div className="min-h-screen px-6 py-16 text-foreground md:py-24">
-      <div className="mx-auto max-w-md rounded-[2rem] border border-white/50 bg-surface/85 p-8 shadow-2xl backdrop-blur-xl">
-        <h1 className="text-3xl font-black tracking-tight">Welcome to Job Trainer AI</h1>
+    <div className="flex min-h-screen items-center justify-center px-6 py-16 text-foreground md:py-24">
+      <div className="mx-auto max-w-md lux-card lux-topline gold-glow fade-up rounded-[2rem] p-8 md:p-10">
+        <p className="eyebrow">Welcome</p>
+        <h1 className="font-display mt-2 text-3xl font-semibold tracking-tight">
+          Start preparing for your <span className="text-gold-gradient">first job</span>
+        </h1>
         <p className="mt-3 text-sm leading-relaxed text-muted">
-          Sign in with Google to start onboarding and get your personalized job
-          roadmap.
+          Sign in for a personalized prep plan — what to learn, how to interview, and how to apply after
+          college. Built for freshers with zero experience; progress at your own pace.
         </p>
         <div className="mt-8">
           <button
             type="button"
-            onClick={() => signIn("google", { callbackUrl: "/onboarding" })}
+            onClick={() => signIn("google", { callbackUrl: "/continue" })}
             className="flex w-full items-center justify-center gap-3 rounded-xl bg-gradient-to-r from-primary to-secondary px-4 py-3 font-semibold text-white shadow-lg shadow-primary/30 transition hover:translate-y-[-1px]"
           >
             <svg viewBox="0 0 24 24" className="h-5 w-5 fill-current" aria-hidden="true">

@@ -1,48 +1,536 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f3f4f4;
-  --foreground: #2c2c2c;
-  --surface: #ffffff;
-  --primary: #853953;
-  --secondary: #612d53;
-  --accent: #612d53;
-  --highlight: #2c2c2c;
-  --muted: #4a4a4a;
+  /* Midnight luxury base */
+  --background: #070a12;
+  --background-2: #0a0e1a;
+  --foreground: #f4f6fb;
+  --surface: #111827;
+  --surface-elevated: #18213a;
+
+  /* Brand — trust-first (blue/navy) */
+  --primary: #3b82f6;
+  --secondary: #2563eb;
+  --accent: #38bdf8;
+  --highlight: #60a5fa;
+  --muted: #94a3b8;
+
+  /* Signals */
+  --success: #22c55e;
+  --urgency: #f87171;
+  --trust: #3b82f6;
+  --achievement: #22c55e;
+  --action: #f97316;
+
+  /* Luxury accents */
+  --gold: #e8c879;
+  --gold-deep: #c39a4e;
+  --champagne: #f3e2b3;
+  --premium: #b06cf5;
+  --premium-deep: #7c3aed;
+
+  /* Hairlines & shadows */
+  --border: color-mix(in srgb, var(--trust) 12%, transparent);
+  --hairline-gold: color-mix(in srgb, var(--gold) 22%, transparent);
+  --shadow-soft: 0 18px 50px -20px rgba(2, 6, 23, 0.75);
+  --shadow-lux: 0 30px 80px -30px rgba(2, 6, 23, 0.9);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-surface: var(--surface);
+  --color-surface-elevated: var(--surface-elevated);
   --color-primary: var(--primary);
   --color-secondary: var(--secondary);
   --color-accent: var(--accent);
   --color-highlight: var(--highlight);
   --color-muted: var(--muted);
+  --color-success: var(--success);
+  --color-urgency: var(--urgency);
+  --color-gold: var(--gold);
+  --color-champagne: var(--champagne);
+  --color-trust: var(--trust);
+  --color-achievement: var(--achievement);
+  --color-premium: var(--premium);
+  --color-action: var(--action);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #2c2c2c;
-    --foreground: #f3f4f4;
-    --surface: #3a3a3a;
-    --muted: #cfd3d3;
-  }
+  --font-display: var(--font-display), var(--font-geist-sans);
 }
 
 body {
   background:
-    radial-gradient(circle at 10% 5%, color-mix(in srgb, var(--secondary) 14%, transparent), transparent 40%),
-    radial-gradient(circle at 90% 10%, color-mix(in srgb, var(--accent) 14%, transparent), transparent 45%),
-    var(--background);
+    radial-gradient(circle at 15% -8%, color-mix(in srgb, var(--trust) 12%, transparent), transparent 40%),
+    radial-gradient(circle at 88% 0%, color-mix(in srgb, var(--premium) 7%, transparent), transparent 42%),
+    linear-gradient(180deg, var(--background) 0%, var(--background-2) 100%);
+  background-attachment: fixed;
   color: var(--foreground);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
   min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Subtle film grain for a richer, less "flat" surface */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+body > * {
+  position: relative;
+  z-index: 1;
 }
 
 * {
-  border-color: color-mix(in srgb, var(--muted) 24%, transparent);
+  border-color: var(--border);
+}
+
+::selection {
+  background: color-mix(in srgb, var(--trust) 35%, transparent);
+  color: var(--foreground);
+}
+
+/* Refined scrollbar */
+::-webkit-scrollbar {
+  width: 11px;
+  height: 11px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--trust) 30%, transparent);
+  border: 3px solid transparent;
+  border-radius: 999px;
+  background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--trust) 50%, transparent);
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+
+/* ---------- Display typography ---------- */
+.font-display {
+  font-family: var(--font-display), var(--font-geist-sans), serif;
+  letter-spacing: -0.01em;
+}
+
+.eyebrow {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--trust) 78%, var(--foreground));
+}
+
+/* ---------- Cards ---------- */
+.glass-card {
+  position: relative;
+  border: 1px solid color-mix(in srgb, var(--foreground) 8%, transparent);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--foreground) 4%, transparent), transparent 60%),
+    color-mix(in srgb, var(--surface) 82%, transparent);
+  backdrop-filter: blur(16px) saturate(140%);
+  box-shadow: var(--shadow-soft), inset 0 1px 0 color-mix(in srgb, var(--foreground) 9%, transparent);
+}
+
+.trust-card {
+  position: relative;
+  border: 1px solid color-mix(in srgb, var(--trust) 20%, transparent);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--trust) 9%, transparent), transparent 55%),
+    color-mix(in srgb, var(--surface) 90%, transparent);
+  box-shadow: var(--shadow-soft), inset 0 1px 0 color-mix(in srgb, var(--foreground) 7%, transparent);
+}
+
+.premium-card {
+  position: relative;
+  border: 1px solid color-mix(in srgb, var(--premium) 32%, transparent);
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--premium) 12%, var(--surface)) 0%,
+    color-mix(in srgb, var(--surface) 96%, transparent) 60%
+  );
+  box-shadow: 0 0 40px -8px color-mix(in srgb, var(--premium) 22%, transparent),
+    inset 0 1px 0 color-mix(in srgb, var(--foreground) 8%, transparent);
+}
+
+/* Primary surface card — calm navy with a soft blue hairline */
+.lux-card {
+  position: relative;
+  border: 1px solid color-mix(in srgb, var(--trust) 14%, transparent);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--trust) 4%, transparent), transparent 55%),
+    color-mix(in srgb, var(--surface) 92%, transparent);
+  box-shadow: var(--shadow-soft), inset 0 1px 0 color-mix(in srgb, var(--foreground) 6%, transparent);
+}
+
+.inner-card {
+  border-radius: 1rem;
+  border: 1px solid color-mix(in srgb, var(--foreground) 8%, transparent);
+  background: color-mix(in srgb, var(--surface-elevated) 55%, transparent);
+  padding: 1rem;
+}
+
+/* Hairline accent divider on the top edge of a card */
+.lux-topline::after {
+  content: "";
+  position: absolute;
+  inset: 0 14% auto 14%;
+  height: 1px;
+  top: -1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--trust) 55%, transparent),
+    transparent
+  );
+}
+
+/* ---------- Borders & glows (restrained) ---------- */
+.glow-border {
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--foreground) 9%, transparent),
+    var(--shadow-soft);
+}
+
+.premium-glow {
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--premium) 30%, transparent),
+    0 0 18px -8px color-mix(in srgb, var(--premium) 22%, transparent);
+}
+
+.gold-glow {
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--trust) 18%, transparent),
+    0 0 18px -8px color-mix(in srgb, var(--trust) 22%, transparent);
+}
+
+/* ---------- Buttons ---------- */
+.btn-action {
+  background: linear-gradient(135deg, var(--action) 0%, #ea580c 100%);
+  color: white;
+  font-weight: 700;
+  box-shadow: 0 10px 28px -8px color-mix(in srgb, var(--action) 60%, transparent);
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
+}
+.btn-action:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 34px -8px color-mix(in srgb, var(--action) 70%, transparent);
+}
+
+.btn-trust {
+  background: linear-gradient(135deg, var(--trust) 0%, #2563eb 100%);
+  color: white;
+  font-weight: 600;
+  box-shadow: 0 10px 26px -8px color-mix(in srgb, var(--trust) 55%, transparent);
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.btn-trust:hover {
+  transform: translateY(-2px);
+}
+
+.btn-premium {
+  background: linear-gradient(135deg, var(--premium) 0%, var(--premium-deep) 100%);
+  color: white;
+  font-weight: 600;
+  box-shadow: 0 10px 26px -8px color-mix(in srgb, var(--premium) 55%, transparent);
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.btn-premium:hover {
+  transform: translateY(-2px);
+}
+
+/* Primary CTA — trust blue, white ink */
+.btn-lux {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--trust) 0%, var(--secondary) 100%);
+  color: #ffffff;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  box-shadow: 0 10px 26px -10px color-mix(in srgb, var(--trust) 60%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
+}
+.btn-lux:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 32px -10px color-mix(in srgb, var(--trust) 70%, transparent);
+}
+.btn-lux::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.22) 50%, transparent 70%);
+  transform: translateX(-120%);
+}
+.btn-lux:hover::after {
+  animation: sheen 0.9s ease;
+}
+
+.btn-ghost {
+  border: 1px solid color-mix(in srgb, var(--trust) 28%, transparent);
+  background: color-mix(in srgb, var(--trust) 7%, transparent);
+  color: color-mix(in srgb, var(--trust) 88%, var(--foreground));
+  font-weight: 600;
+  transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+}
+.btn-ghost:hover {
+  transform: translateY(-2px);
+  background: color-mix(in srgb, var(--trust) 13%, transparent);
+  border-color: color-mix(in srgb, var(--trust) 45%, transparent);
+}
+
+/* ---------- Text gradients ---------- */
+.text-gradient {
+  background: linear-gradient(135deg, var(--achievement) 0%, #4ade80 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.text-gold-gradient {
+  background: linear-gradient(120deg, var(--trust) 0%, var(--highlight) 55%, var(--accent) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.text-lux {
+  background: linear-gradient(120deg, #ffffff 0%, var(--highlight) 55%, var(--trust) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ---------- Inputs ---------- */
+.field-input {
+  width: 100%;
+  border-radius: 0.75rem;
+  border: 1px solid color-mix(in srgb, var(--foreground) 12%, transparent);
+  background: color-mix(in srgb, var(--surface-elevated) 70%, transparent);
+  padding: 0.65rem 0.8rem;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.field-input:focus {
+  border-color: color-mix(in srgb, var(--trust) 50%, transparent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--trust) 20%, transparent);
+}
+
+/* ---------- Motion ---------- */
+.fade-up {
+  animation: fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes sheen {
+  to {
+    transform: translateX(120%);
+  }
+}
+
+.float {
+  animation: float 6s ease-in-out infinite;
+}
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+/* Slow shimmer for premium badges/lines */
+.shimmer {
+  background-size: 200% 100%;
+  animation: shimmer 3.5s linear infinite;
+}
+@keyframes shimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
+
+/* ---------- Hover & interaction ---------- */
+.hover-lift {
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+  will-change: transform;
+}
+.hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-soft);
+  border-color: color-mix(in srgb, var(--trust) 28%, transparent);
+}
+
+/* Cards that respond to the pointer with a soft gold wash */
+.card-interactive {
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.25s ease;
+}
+.card-interactive:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 20px 50px -28px rgba(2, 6, 23, 0.85),
+    0 0 0 1px color-mix(in srgb, var(--trust) 20%, transparent);
+}
+
+/* Animated underline for inline links */
+.link-underline {
+  position: relative;
+  background-image: linear-gradient(var(--trust), var(--trust));
+  background-size: 0% 1px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  transition: background-size 0.3s ease;
+}
+.link-underline:hover {
+  background-size: 100% 1px;
+}
+
+/* Pressable feedback for any button */
+.press:active {
+  transform: scale(0.97);
+}
+
+/* ---------- Loading: skeleton ---------- */
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.65rem;
+  background: color-mix(in srgb, var(--surface-elevated) 70%, transparent);
+}
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--foreground) 8%, transparent),
+    color-mix(in srgb, var(--trust) 6%, transparent),
+    transparent
+  );
+  animation: skeleton-sweep 1.5s ease-in-out infinite;
+}
+@keyframes skeleton-sweep {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* ---------- Loading: spinner ---------- */
+.spinner {
+  display: inline-block;
+  height: 1.05em;
+  width: 1.05em;
+  vertical-align: -0.15em;
+  border-radius: 999px;
+  border: 2px solid color-mix(in srgb, currentColor 25%, transparent);
+  border-top-color: currentColor;
+  animation: spin 0.7s linear infinite;
+}
+.spinner-on-lux {
+  border-color: rgba(255, 255, 255, 0.35);
+  border-top-color: #ffffff;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Three-dot typing/loading indicator */
+.dots span {
+  display: inline-block;
+  height: 0.4rem;
+  width: 0.4rem;
+  margin: 0 0.1rem;
+  border-radius: 999px;
+  background: currentColor;
+  animation: dot-bounce 1.2s ease-in-out infinite;
+}
+.dots span:nth-child(2) {
+  animation-delay: 0.15s;
+}
+.dots span:nth-child(3) {
+  animation-delay: 0.3s;
+}
+@keyframes dot-bounce {
+  0%,
+  60%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.5;
+  }
+  30% {
+    transform: translateY(-0.3rem);
+    opacity: 1;
+  }
+}
+
+/* ---------- Animated gradient text ---------- */
+.text-lux,
+.text-gold-gradient {
+  background-size: 200% auto;
+  animation: gradient-pan 6s ease infinite;
+}
+@keyframes gradient-pan {
+  0%,
+  100% {
+    background-position: 0% center;
+  }
+  50% {
+    background-position: 100% center;
+  }
+}
+
+/* ---------- Staggered entrance for lists/grids ---------- */
+.stagger > * {
+  animation: fade-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.stagger > *:nth-child(1) { animation-delay: 0.04s; }
+.stagger > *:nth-child(2) { animation-delay: 0.1s; }
+.stagger > *:nth-child(3) { animation-delay: 0.16s; }
+.stagger > *:nth-child(4) { animation-delay: 0.22s; }
+.stagger > *:nth-child(5) { animation-delay: 0.28s; }
+.stagger > *:nth-child(6) { animation-delay: 0.34s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .fade-up,
+  .float,
+  .shimmer,
+  .btn-lux::after,
+  .skeleton::after,
+  .spinner,
+  .dots span,
+  .text-lux,
+  .text-gold-gradient,
+  .stagger > * {
+    animation: none;
+  }
+  .hover-lift,
+  .card-interactive,
+  .press {
+    transition: none;
+  }
 }

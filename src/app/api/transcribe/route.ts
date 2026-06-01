@@ -1,12 +1,29 @@
 import { NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/auth";
+import { enforceRateLimit } from "@/lib/rate-limit";
+
+const MAX_AUDIO_BYTES = 15 * 1024 * 1024; // 15 MB
 
 export async function POST(request: Request) {
   try {
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const limited = enforceRateLimit(request, "transcribe", session.user.id, { limit: 15, windowMs: 60_000 });
+    if (limited) return limited;
+
     const formData = await request.formData();
     const file = formData.get("audio");
 
     if (!(file instanceof File)) {
       return NextResponse.json({ error: "Audio file is required." }, { status: 400 });
+    }
+
+    if (file.size > MAX_AUDIO_BYTES) {
+      return NextResponse.json({ error: "Audio file is too large (max 15 MB)." }, { status: 413 });
     }
 
     const groqKey = process.env.GROQ_API_KEY;
@@ -31,7 +48,8 @@ export async function POST(request: Request) {
 
     if (!transcribeResponse.ok) {
       const details = await transcribeResponse.text();
-      return NextResponse.json({ error: `Transcription failed: ${details}` }, { status: 502 });
+      console.error("[transcribe] provider error:", transcribeResponse.status, details.slice(0, 300));
+      return NextResponse.json({ error: "Transcription service is unavailable. Please try again." }, { status: 502 });
     }
 
     const json = (await transcribeResponse.json()) as { text?: string };
